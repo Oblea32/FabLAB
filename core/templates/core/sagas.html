@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Sagas{% endblock %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<h2 class="text-center mt-0">Material de aprendizaje</h2>
+<br>
+<br>
+<div class="container mt-4">
+
+    <div class="row">
+        {% for saga in sagas %}
+        <div class="col-md-4 mb-3">
+            <div class="card" style="width: 18rem;">
+                {% if saga.imagen %}
+                    <img src="{{ saga.imagen.url }}" class="card-img-top" alt="Imagen de {{ saga.nombre }}" height="300px" width="250px">
+                {% else %}
+                    <img src="https://via.placeholder.com/250x300" class="card-img-top" alt="Imagen no disponible" height="300px" width="250px">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ saga.nombre }}</h5>
+                    <p class="card-text">{{ saga.descripcion }}</p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Creado: {{ saga.creado|date:"d M Y H:i" }}<br> 
+                            Actualizado: {{ saga.actualizado|date:"d M Y H:i" }} 
+                        </small>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No hay sagas disponibles en este momento.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Paginación -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">Primero</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Último</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+</div>
+{% endblock %}

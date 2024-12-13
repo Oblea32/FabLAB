@@ -1,0 +1,74 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+<section class="page-section clearfix">
+    <div class="container">
+        <div class="intro">
+            <h2 class="section-heading mb-4" style="color: #000000;">
+                <span class="section-heading-upper"><strong>Envíanos tu mensaje</strong></span>
+            </h2>
+
+            <!-- Mostrar los mensajes de Django (Éxito/Error) -->
+            {% if 'ok' in request.GET %}
+                <div class="alert alert-success" style="color: white; background-color: #28a745;">
+                    <strong>¡El mensaje se ha enviado correctamente!</strong>
+                </div>
+            {% endif %}
+
+            {% if 'error' in request.GET %}
+                <div class="alert alert-danger" style="color: white; background-color: #dc3545;">
+                    <strong>¡Hubo un problema al enviar el mensaje! Por favor, inténtalo más tarde.</strong>
+                </div>
+            {% endif %}
+            
+            <!-- Formulario de contacto -->
+            <form method="POST" action="{% url 'contacto' %}">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="id_name" style="color: #fafafa;"><strong>Nombre y Apellido</strong></label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="alert alert-danger mt-2" style="color: white; background-color: #dc3545;">
+                            {% for error in form.name.errors %}
+                                <p><strong>{{ error }}</strong></p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_email" style="color: #fafafa;"><strong>Correo</strong></label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="alert alert-danger mt-2" style="color: white; background-color: #dc3545;">
+                            {% for error in form.email.errors %}
+                                <p><strong>{{ error }}</strong></p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_message" style="color: #f7f6f6;"><strong>Mensaje</strong></label>
+                    {{ form.message }}
+                    {% if form.message.errors %}
+                        <div class="alert alert-danger mt-2" style="color: white; background-color: #dc3545;">
+                            {% for error in form.message.errors %}
+                                <p><strong>{{ error }}</strong></p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <p> </p>
+
+                <!-- Botón de envío -->
+                <button type="submit" class="btn btn-primary btn-xl" style="background-color: #00ffff; border-color: #00ffff; color: #000000;">
+                    <strong>Enviar Mensaje</strong>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

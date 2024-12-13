@@ -1,0 +1,73 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Galeria{% endblock %}
+
+{% block content %}
+<div id="portfolio" style="margin-top: 80px; background-color: rgb(240, 241, 141);"> 
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <div class="col-lg-4 col-sm-6">
+                <a class="portfolio-box" href="{% static 'core/assets/img/portfolio/fullsize/campus.jpg' %}" title="INSTITUCIÓN">
+                    <img class="img-fluid" src="{% static 'core/assets/img/portfolio/thumbnails/campus.jpg' %}" alt="Jill Valentine" />
+                    <div class="portfolio-box-caption">
+                        <div class="project-category text-white-50">Categoria</div>
+                        <div class="project-name">INACAP</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <a class="portfolio-box" href="{% static 'core/assets/img/portfolio/fullsize/libros.jpg' %}" title="APUNTES">
+                    <img class="img-fluid" src="{% static 'core/assets/img/portfolio/thumbnails/libros.jpg' %}" alt="Resident Evil 2" />
+                    <div class="portfolio-box-caption">
+                        <div class="project-category text-white-50">Categoria</div>
+                        <div class="project-name">Libros</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <a class="portfolio-box" href="{% static 'core/assets/img/portfolio/fullsize/estudiantes.png' %}" title="ESTUDIANTES">
+                    <img class="img-fluid" src="{% static 'core/assets/img/portfolio/thumbnails/estudiantes.png' %}" alt="Leon S. Kennedy" />
+                    <div class="portfolio-box-caption">
+                        <div class="project-category text-white-50">Categoria</div>
+                        <div class="project-name">ESTUDIANTES</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <a class="portfolio-box" href="{% static 'core/assets/img/portfolio/fullsize/musica.jpg' %}" title="MUSICA">
+                    <img class="img-fluid" src="{% static 'core/assets/img/portfolio/thumbnails/musica.jpg' %}" alt="Resident Evil 6" />
+                    <div class="portfolio-box-caption">
+                        <div class="project-category text-white-50">Categoria</div>
+                        <div class="project-name">MUSICA</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <a class="portfolio-box" href="{% static 'core/assets/img/portfolio/fullsize/profesor.jpg' %}" title="DOCENTE">
+                    <img class="img-fluid" src="{% static 'core/assets/img/portfolio/thumbnails/profesor.jpg' %}" alt="Leon y Helena" />
+                    <div class="portfolio-box-caption">
+                        <div class="project-category text-white-50">Categoria</div>
+                        <div class="project-name">DOCENTES</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <a class="portfolio-box" href="{% static 'core/assets/img/portfolio/fullsize/redes.jpg' %}" title="RAMOS">
+                    <img class="img-fluid" src="{% static 'core/assets/img/portfolio/thumbnails/redes.jpg' %}" alt="Resident Evil 5" />
+                    <div class="portfolio-box-caption p-3">
+                        <div class="project-category text-white-50">Categoria</div>
+                        <div class="project-name">ASIGNATURAS</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Call to action-->
+<section class="page-section bg-dark text-white">
+    <div class="container px-4 px-lg-5 text-center">
+        <h2 class="mb-4">¡El ambiente que necesitas está en Inacap!</h2>
+        <a class="btn btn-light btn-xl" href="https://portal.inacap.cl/">Entrar Ahora</a>
+    </div>
+</section>
+{% endblock %}
