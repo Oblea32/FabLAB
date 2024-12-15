@@ -7,12 +7,12 @@
 <section class="page-section clearfix">
     <div class="container">
         <div class="intro">
-            <h2 class="section-heading mb-4" style="color: #000000;">
+            <h2 class="section-heading mb-4" style="color: #f3b408e1;">
                 <span class="section-heading-upper"><strong>¡Regístrate ahora!</strong></span>
                 <span class="section-heading-lower"><strong>Crea tu cuenta</strong></span>
             </h2>
             
-            <!-- Mostrar los mensajes de Django (Éxito/Error) -->
+           
             {% if messages %}
                 <div class="alert alert-success" style="color: white; background-color: #356fdc;">
                     {% for message in messages %}
@@ -21,12 +21,12 @@
                 </div>
             {% endif %}
             
-            <!-- Formulario de Registro -->
+            
             <form method="POST" action="{% url 'register' %}">
                 {% csrf_token %}
 
                 <div class="form-group">
-                    <label for="id_first_name" style="color: #000000;"><strong>Nombre</strong></label>
+                    <label for="id_first_name" style="color: hsl(0, 0%, 0%);"><strong>Nombre</strong></label>
                     <input type="text" name="first_name" id="id_first_name" class="form-control" value="{{ form.first_name.value|default:'' }}" required>
                     {% if form.first_name.errors %}
                         <div class="alert alert-danger mt-2" style="color: white; background-color: #dc3545;">
@@ -97,19 +97,16 @@
                     {% endif %}
                 </div>
 
-                <!-- Campo para seleccionar el tipo de usuario -->
-                <div class="form-group">
-                    <label for="id_user_type" style="color: #000000;"><strong>Tipo de Usuario</strong></label>
-                    {{ form.user_type }}
-                </div>
+                
+        
 
-                <button type="submit" class="btn btn-primary btn-xl mt-3" style="background-color: #00ffff; border-color: #00ffff; color: #000000;">
+                <button type="submit" class="btn btn-primary btn-xl mt-3" style="background-color: #fa3a00; border-color: #ff1100; color: #000000;">
                     <strong>Registrar</strong>
                 </button>
             </form>
 
-            <!-- Enlace para usuarios que ya tienen cuenta -->
-            <p class="mt-3" style="color: #000000;">
+           
+            <p class="mt-3" style="color: #07e3f3;">
                 ¿Ya tienes cuenta? <a href="{% url 'login' %}" style="color: #356fdc;"><strong>Inicia sesión aquí</strong></a>
             </p>
         </div>

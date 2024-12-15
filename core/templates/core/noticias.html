@@ -31,6 +31,7 @@
                             Actualizado: {{ noticia.fecha_actualizacion|date:"d M Y H:i" }}
                         </small>
                     </p>
+                    <a href="#" class="btn btn-primary inscribirse-btn">Inscribirse</a>
                 </div>
             </div>
         </div>
@@ -38,6 +39,9 @@
         <p>No hay noticias disponibles en este momento.</p>
         {% endfor %}
     </div>
+
+    <!-- Mensaje de felicitaciones por inscripción -->
+    <div id="mensaje-inscripcion" style="display: none;" class="alert alert-success mt-3">Felicidades por inscribirte al curso</div>
 
     <!-- Paginación -->
     <nav aria-label="Page navigation example">
@@ -55,4 +59,16 @@
     </nav>
 
 </div>
+
+<script>
+    document.querySelectorAll('.inscribirse-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            document.getElementById('mensaje-inscripcion').style.display = 'block';
+            setTimeout(function(){
+                window.location.href = "{% url 'index' %}";
+            }, 3000); // Redirigir al index.html después de 3 segundos (3000 ms)
+        });
+    });
+</script>
 {% endblock %}
+
