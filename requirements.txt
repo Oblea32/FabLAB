@@ -6,5 +6,4 @@ psycopg2==2.9.10
 sqlparse==0.5.3  # Asegúrate de usar una versión estable de sqlparse
 typing_extensions==4.5.0  # Versión estable
 tzdata==2024.2  # La versión más reciente
-crispy-forms
-
+django-crispy-forms
