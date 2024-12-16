@@ -13,11 +13,19 @@ class CustomUserCreationForm(UserCreationForm):
     # Campo para capturar el apellido del usuario (requerido).
     last_name = forms.CharField(max_length=100, required=True, label="Apellido")
 
-
+    # Campo para seleccionar el tipo de usuario con opciones predefinidas.
+    user_type = forms.ChoiceField(
+        choices=[
+            ('normal', 'Estudiante'), 
+        ],  
+        widget=forms.RadioSelect,  # Usa botones de opción (radio buttons) para la selección.
+        required=True,
+        label="Tipo de Usuario",
+    )
 
     class Meta:
         model = User  # Basado en el modelo `User` de Django.
-        fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']  # Campos incluidos en el formulario.
+        fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2', 'user_type']  # Campos incluidos en el formulario.
 
     # Sobrescribe el método `save` para incluir campos adicionales.
     def save(self, commit=True):  

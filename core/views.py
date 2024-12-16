@@ -67,7 +67,7 @@ def register(request):
             user.is_staff = True  # Otorga permisos de staff al usuario.
             user.save()  # Guarda los cambios del usuario.
 
-            
+            user_type = form.cleaned_data.get('user_type')  # Obtiene el tipo de usuario del formulario.
 
             # Función para crear grupos con permisos si no existen.
             def create_group_with_permissions(group_name, model, actions):
@@ -83,17 +83,25 @@ def register(request):
                 return group
 
             # Asigna el usuario a un grupo según el tipo de usuario seleccionado.
-            if user_type == 'admin':
+            if user_type == 'administrador juegos':
                 admin_group = create_group_with_permissions(
-                    'Docente',
+                    'Administrador de Juegos',
                     Saga,
                     ['add', 'change', 'delete', 'view']
                 )
                 user.groups.add(admin_group)
-                messages.success(request, "¡Registro exitoso como Docente! Ahora puedes iniciar sesión.")
+                messages.success(request, "¡Registro exitoso como Administrador de Juegos! Ahora puedes iniciar sesión.")
 
+            elif user_type == 'editor enemigos':
+                editor_enemigos_group = create_group_with_permissions(
+                    'Editor de Enemigos',
+                    Enemigos,
+                    ['add', 'change', 'delete', 'view']
+                )
+                user.groups.add(editor_enemigos_group)
+                messages.success(request, "¡Registro exitoso como Editor de Enemigos! Ahora puedes iniciar sesión.")
 
-            elif user_type == 'editor ':
+            elif user_type == 'editor personajes':
                 editor_personajes_group = create_group_with_permissions(
                     'Editor de Personajes',
                     Personajes,
@@ -171,8 +179,4 @@ def contacto(request):
                 return redirect(reverse('contacto') + '?error')  # Redirige con un mensaje de error si el envío falla.
 
     return render(request, "core/contacto.html", {'form': contact_form})  # Renderiza la plantilla de contacto con el formulario.
-
-
-
-
 
