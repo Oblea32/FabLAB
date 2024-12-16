@@ -1,5 +1,5 @@
 asgiref==3.8.1  # Versión más reciente disponible de asgiref
-Django==5.1.2  # La versión más reciente de Django
+Django
 gunicorn==23.0.0
 packaging==24.2
 psycopg2==2.9.10
