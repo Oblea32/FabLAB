@@ -1,8 +1,14 @@
 {
   "builds": [
-    { "src": "wsgi.py", "use": "@vercel/python" }
+    {
+      "src": "resident_evil/wsgi.py",
+      "use": "@vercel/python"
+    }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "wsgi.py" }
+    {
+      "src": "/(.*)",
+      "dest": "resident_evil/wsgi.py"
+    }
   ]
 }
