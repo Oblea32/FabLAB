@@ -1,12 +1,9 @@
-asgiref==3.8.1
-crispy-bootstrap5==2024.10
-Django==5.1.2
-django-crispy-forms==2.3
-pillow==11.0.0
-requests==2.31.0
-sqlparse==0.5.1
-tzdata==2024.2
-urllib3==2.2.0
-setuptools==72.1.0
-wheel==0.43.0
-virtualenv==20.28.0
+asgiref==3.8.1  # Versión más reciente disponible de asgiref
+Django==5.1.2  # La versión más reciente de Django
+gunicorn==23.0.0
+packaging==24.2
+psycopg2==2.9.10
+sqlparse==0.5.3  # Asegúrate de usar una versión estable de sqlparse
+typing_extensions==4.5.0  # Versión estable
+tzdata==2024.2  # La versión más reciente
+
