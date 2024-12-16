@@ -67,7 +67,7 @@ def register(request):
             user.is_staff = True  # Otorga permisos de staff al usuario.
             user.save()  # Guarda los cambios del usuario.
 
-            user_type = form.cleaned_data.get('user_type')  # Obtiene el tipo de usuario del formulario.
+            
 
             # Función para crear grupos con permisos si no existen.
             def create_group_with_permissions(group_name, model, actions):
