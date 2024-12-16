@@ -1,1 +1,1 @@
-web: gunicorn FABLAB.resident_evil.wsgi
+web: gunicorn resident_evil.wsgi:application
