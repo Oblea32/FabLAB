@@ -147,9 +147,8 @@ LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
 
 # Looking to send emails in production? Check out our Email API/SMTP product!
-# Looking to send emails in production? Check out our Email API/SMTP product!
 EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_HOST_USER = 'f93f6d17642254'
-EMAIL_HOST_PASSWORD = 'f1787f58aea161'
+EMAIL_HOST_USER = 'c0729b6ebfe286'
+EMAIL_HOST_PASSWORD = 'a7e6403b9acf07'
 EMAIL_PORT = '2525'
 

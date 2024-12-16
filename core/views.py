@@ -83,25 +83,17 @@ def register(request):
                 return group
 
             # Asigna el usuario a un grupo según el tipo de usuario seleccionado.
-            if user_type == 'administrador juegos':
+            if user_type == 'admin':
                 admin_group = create_group_with_permissions(
-                    'Administrador de Juegos',
+                    'Docente',
                     Saga,
                     ['add', 'change', 'delete', 'view']
                 )
                 user.groups.add(admin_group)
-                messages.success(request, "¡Registro exitoso como Administrador de Juegos! Ahora puedes iniciar sesión.")
+                messages.success(request, "¡Registro exitoso como Docente! Ahora puedes iniciar sesión.")
 
-            elif user_type == 'editor enemigos':
-                editor_enemigos_group = create_group_with_permissions(
-                    'Editor de Enemigos',
-                    Enemigos,
-                    ['add', 'change', 'delete', 'view']
-                )
-                user.groups.add(editor_enemigos_group)
-                messages.success(request, "¡Registro exitoso como Editor de Enemigos! Ahora puedes iniciar sesión.")
 
-            elif user_type == 'editor personajes':
+            elif user_type == 'editor ':
                 editor_personajes_group = create_group_with_permissions(
                     'Editor de Personajes',
                     Personajes,
