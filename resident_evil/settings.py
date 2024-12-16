@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-++gvp7$-gw(gy^^0epl308s&87b#3@9chqvw55i8=0jqytj#w0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['intranetfablab.herokuapp.com','fab-lab-blue.vercel.app', 'localhost', '127.0.0.1', 'intranetfablab-e6256bdb193d.herokuapp.com']
+ALLOWED_HOSTS = ['fablab-b26m.onrender.com','intranetfablab.herokuapp.com','fab-lab-blue.vercel.app', 'localhost', '127.0.0.1', 'intranetfablab-e6256bdb193d.herokuapp.com']
 
 
 
