@@ -1,9 +1,10 @@
-asgiref==3.8.1  # Versión más reciente disponible de asgiref
+asgiref==3.8.1  
 Django
 gunicorn==23.0.0
 packaging==24.2
 psycopg2==2.9.10
-sqlparse==0.5.3  # Asegúrate de usar una versión estable de sqlparse
-typing_extensions==4.5.0  # Versión estable
-tzdata==2024.2  # La versión más reciente
+sqlparse==0.5.3  
+typing_extensions==4.5.0  
+tzdata==2024.2  
 django-crispy-forms
+crispy-bootstrap5
