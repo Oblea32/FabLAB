@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-++gvp7$-gw(gy^^0epl308s&87b#3@9chqvw55i8=0jqytj#w0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['fab-lab-blue.vercel.app', 'localhost', '127.0.0.1']
+
 
 
 # Application definition
