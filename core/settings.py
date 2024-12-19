@@ -156,4 +156,4 @@ EMAIL_PORT = '2525'
 
 DEBUG = True  # Para local
 # Para Render, en settings.py:
-DEBUG = False  # Para producción
+#DEBUG = False  # Para producción
