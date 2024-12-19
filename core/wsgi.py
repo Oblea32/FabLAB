@@ -14,7 +14,7 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 # Configura el entorno de Django para usar el archivo settings.py
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
