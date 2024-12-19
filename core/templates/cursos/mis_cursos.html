@@ -1,0 +1,37 @@
+<!-- templates/cursos/mis_cursos.html -->
+{% extends 'core/base.html' %}
+
+{% block content %}
+<section class="page-section clearfix">
+    <div class="container">
+        <div class="intro">
+            <h2 class="section-heading mb-4" style="color: #000000;">
+                <span class="section-heading-upper"><strong>Mis Cursos</strong></span>
+            </h2>
+
+            {% if messages %}
+                <div class="alert alert-success" style="color: white; background-color: #356fdc;">
+                    {% for message in messages %}
+                        <p><strong>{{ message }}</strong></p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="row">
+                {% for curso in cursos %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ curso.nombre }}</h5>
+                            <p class="card-text">{{ curso.descripcion }}</p>
+                            <p class="card-text"><small>Docente: {{ curso.docente.get_full_name }}</small></p>
+                            <a href="{% url 'detalle_curso' curso.id %}" class="btn btn-primary">Ver Contenido</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

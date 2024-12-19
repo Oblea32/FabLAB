@@ -2,42 +2,53 @@
 from django import forms  # Módulo de Django para crear y manejar formularios.
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm  # Formularios estándar de Django para registro y autenticación.
 from django.contrib.auth.models import User  # Modelo de usuario predeterminado de Django.
+from .models import CustomUser
+from django.contrib.auth import get_user_model
+CustomUser = get_user_model()
+from .models import Curso
 
-
-# Formulario personalizado para la creación de un usuario
-class CustomUserCreationForm(UserCreationForm):  
-    # Campo adicional para capturar el correo electrónico del usuario (requerido).
-    email = forms.EmailField(required=True, label="Correo Electrónico")
-    # Campo para capturar el nombre del usuario (requerido).
-    first_name = forms.CharField(max_length=100, required=True, label="Nombre")
-    # Campo para capturar el apellido del usuario (requerido).
-    last_name = forms.CharField(max_length=100, required=True, label="Apellido")
-
-    # Campo para seleccionar el tipo de usuario con opciones predefinidas.
-    user_type = forms.ChoiceField(
-        choices=[
-            ('normal', 'Estudiante'), 
-        ],  
-        widget=forms.RadioSelect,  # Usa botones de opción (radio buttons) para la selección.
-        required=True,
-        label="Tipo de Usuario",
-    )
-
+class CursoForm(forms.ModelForm):
     class Meta:
-        model = User  # Basado en el modelo `User` de Django.
-        fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2', 'user_type']  # Campos incluidos en el formulario.
+        model = Curso
+        fields = ['nombre', 'descripcion', 'docente']
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-control'}),
+            'docente': forms.Select(attrs={'class': 'form-control'})
+        }
 
-    # Sobrescribe el método `save` para incluir campos adicionales.
-    def save(self, commit=True):  
-        user = super().save(commit=False)  # Llama al método `save` de la clase padre, sin guardar aún en la base de datos.
-        user.email = self.cleaned_data.get('email')  # Asigna el correo electrónico al usuario.
-        user.first_name = self.cleaned_data.get('first_name')  # Asigna el nombre al usuario.
-        user.last_name = self.cleaned_data.get('last_name')  # Asigna el apellido al usuario.
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filtrar solo docentes en el campo docente
+        self.fields['docente'].queryset = CustomUser.objects.filter(user_type='docente')
 
-        if commit:  # Si `commit` es True, guarda el usuario en la base de datos.
+class CustomUserCreationForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+        
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.user_type = 'estudiante'  # Solo estudiantes pueden registrarse
+        if commit:
             user.save()
+        return user
 
-        return user  # Devuelve la instancia de usuario creada.
+class DocenteCreationForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+    
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'first_name', 'last_name', 'email']
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.user_type = 'docente'
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user
+
 
 
 # Formulario personalizado para el inicio de sesión (autenticación)

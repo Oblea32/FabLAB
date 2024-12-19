@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<section class="page-section clearfix">
+    <div class="container">
+        <div class="intro">
+            <h2 class="section-heading mb-4" style="color: #000000;">
+                <span class="section-heading-upper"><strong>{{ curso.nombre }}</strong></span>
+            </h2>
+
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Detalles del Curso</h3>
+                    <p class="card-text"><strong>Descripción:</strong> {{ curso.descripcion }}</p>
+                    <p class="card-text"><strong>Docente:</strong> {{ curso.docente.get_full_name }}</p>
+                    
+                    {% if user.user_type == 'estudiante' and user not in curso.estudiantes.all %}
+                        <a href="{% url 'inscribir_curso' curso.id %}" class="btn btn-primary">Inscribirse en este curso</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

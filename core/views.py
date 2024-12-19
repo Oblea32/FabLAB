@@ -1,14 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, ContactForm  # Formularios personalizados definidos en la aplicación.
-from .models import Saga, Personajes, Enemigos  # Modelos definidos en la aplicación.
 from django.contrib import messages  # Para manejar mensajes temporales a los usuarios.
 from django.urls import reverse  # Para generar URLs a partir de nombres de vistas.
 from django.core.mail import EmailMessage  # Para manejar el envío de correos electrónicos.
 from django.contrib.auth.models import Group, Permission  # Modelo para manejar grupos y permisos.
 from django.contrib.contenttypes.models import ContentType  # Para asignar permisos a los modelos.
 from django.core.paginator import Paginator  # Para manejar la paginación de listas.
+from django.contrib.auth.decorators import user_passes_test, login_required
+from .forms import CustomUserCreationForm, DocenteCreationForm
+from .models import Curso, CustomUser
+from .forms import CursoForm
 
 # Vista para la página de inicio (home)
 def index(request):
@@ -25,101 +27,60 @@ def quienes_somos(request):
     return render(request, "core/quienes_somos.html")  # Renderiza la plantilla "quienes_somos.html" para información sobre la organización.
 
 
-# Vista para la página de noticias
-def noticias(request):
-    return render(request, "core/noticias.html")  # Renderiza la plantilla "noticias.html" para la sección de noticias.
-
 
 # Vista para la página de servicios
 def servicios(request):
     return render(request, "core/servicios.html")  # Renderiza la plantilla "servicios.html" para mostrar los servicios disponibles.
 
 
-# Vista para listar todas las sagas
-def lista_sagas(request):
-    sagas = Saga.objects.all()  # Obtiene todas las sagas desde la base de datos.
-    return render(request, 'core/sagas.html', {'sagas': sagas})  # Renderiza la plantilla con la lista de sagas.
 
 
-# Vista para mostrar información detallada de una saga, personajes y enemigos relacionados.
-def informacion(request):
-    query = request.GET.get('saga', '')  # Obtiene el nombre de la saga seleccionada desde los parámetros de la URL.
-    sagas = Saga.objects.all()  # Obtiene todas las sagas para mostrarlas en un menú desplegable.
+def is_admin(user):
+    return user.is_authenticated and user.user_type == 'admin'
 
-    # Filtra personajes y enemigos según la saga seleccionada.
-    personajes = Personajes.objects.filter(saga__nombre=query).distinct() if query else None
-    enemigos = Enemigos.objects.filter(saga__nombre=query).distinct() if query else None
+def is_docente(user):
+    return user.is_authenticated and user.user_type == 'docente'
 
-    return render(request, 'core/informacion.html', {
-        'sagas': sagas,
-        'personajes': personajes,
-        'enemigos': enemigos,
-        'query': query,  # Para mantener la saga seleccionada en el desplegable.
-    })
+def is_estudiante(user):
+    return user.is_authenticated and user.user_type == 'estudiante'
 
-
-# Vista para el registro de un nuevo usuario
 def register(request):
-    if request.method == 'POST':  # Si se envía el formulario (método POST).
-        form = CustomUserCreationForm(request.POST)  # Instancia el formulario con los datos enviados.
-        if form.is_valid():  # Valida el formulario.
-            user = form.save()  # Guarda el nuevo usuario en la base de datos.
-            user.is_staff = True  # Otorga permisos de staff al usuario.
-            user.save()  # Guarda los cambios del usuario.
-
-            user_type = form.cleaned_data.get('user_type')  # Obtiene el tipo de usuario del formulario.
-
-            # Función para crear grupos con permisos si no existen.
-            def create_group_with_permissions(group_name, model, actions):
-                group, created = Group.objects.get_or_create(name=group_name)
-                if created:  # Si el grupo fue creado, asignamos permisos.
-                    content_type = ContentType.objects.get_for_model(model)
-                    for action in actions:
-                        perm = Permission.objects.get_or_create(
-                            codename=f"{action}_{model._meta.model_name}",
-                            content_type=content_type
-                        )[0]
-                        group.permissions.add(perm)
-                return group
-
-            # Asigna el usuario a un grupo según el tipo de usuario seleccionado.
-            if user_type == 'administrador juegos':
-                admin_group = create_group_with_permissions(
-                    'Administrador de Juegos',
-                    Saga,
-                    ['add', 'change', 'delete', 'view']
-                )
-                user.groups.add(admin_group)
-                messages.success(request, "¡Registro exitoso como Administrador de Juegos! Ahora puedes iniciar sesión.")
-
-            elif user_type == 'editor enemigos':
-                editor_enemigos_group = create_group_with_permissions(
-                    'Editor de Enemigos',
-                    Enemigos,
-                    ['add', 'change', 'delete', 'view']
-                )
-                user.groups.add(editor_enemigos_group)
-                messages.success(request, "¡Registro exitoso como Editor de Enemigos! Ahora puedes iniciar sesión.")
-
-            elif user_type == 'editor personajes':
-                editor_personajes_group = create_group_with_permissions(
-                    'Editor de Personajes',
-                    Personajes,
-                    ['add', 'change', 'delete', 'view']
-                )
-                user.groups.add(editor_personajes_group)
-                messages.success(request, "¡Registro exitoso como Editor de Personajes! Ahora puedes iniciar sesión.")
-
-            else:  # Para usuarios normales, no asignamos permisos.
-                messages.success(request, "¡Registro exitoso! Ahora puedes iniciar sesión.")
-
-            return redirect('login')  # Redirige al inicio de sesión tras el registro.
-        else:
-            messages.error(request, "Por favor, corrige los errores en el formulario.")  # Muestra mensaje si hay errores.
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
     else:
-        form = CustomUserCreationForm()  # Si no es POST, crea un formulario vacío.
+        form = CustomUserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
 
-    return render(request, 'registration/register.html', {'form': form})  # Renderiza la plantilla de registro con el formulario.
+@user_passes_test(is_admin)
+def crear_docente(request):
+    if request.method == 'POST':
+        form = DocenteCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_docentes')
+    else:
+        form = DocenteCreationForm()
+    return render(request, 'crear_docente.html', {'form': form})
+
+@user_passes_test(is_estudiante)
+def inscribir_curso(request, curso_id):
+    curso = Curso.objects.get(id=curso_id)
+    curso.estudiantes.add(request.user)
+    return redirect('mis_cursos')
+
+@user_passes_test(is_estudiante)
+def mis_cursos(request):
+    cursos = request.user.cursos_inscritos.all()
+    return render(request, 'mis_cursos.html', {'cursos': cursos})
+
+@user_passes_test(is_docente)
+def gestionar_curso(request, curso_id):
+    curso = Curso.objects.get(id=curso_id)
+    # Lógica para editar curso
+    return render(request, 'gestionar_curso.html', {'curso': curso})
 
 
 # Vista para la autenticación de usuarios (inicio de sesión)
@@ -180,3 +141,81 @@ def contacto(request):
 
     return render(request, "core/contacto.html", {'form': contact_form})  # Renderiza la plantilla de contacto con el formulario.
 
+@login_required
+def lista_cursos(request):
+    cursos = Curso.objects.all()
+    return render(request, 'cursos/lista_cursos.html', {'cursos': cursos})
+
+@login_required
+@user_passes_test(lambda u: u.user_type == 'estudiante')
+def mis_cursos(request):
+    cursos = request.user.cursos_inscritos.all()
+    return render(request, 'cursos/mis_cursos.html', {'cursos': cursos})
+
+@login_required
+@user_passes_test(lambda u: u.user_type == 'docente')
+def gestionar_curso(request, curso_id):
+    curso = get_object_or_404(Curso, id=curso_id, docente=request.user)
+    if request.method == 'POST':
+        curso.nombre = request.POST.get('nombre')
+        curso.descripcion = request.POST.get('descripcion')
+        curso.save()
+        messages.success(request, 'Curso actualizado exitosamente')
+        return redirect('gestionar_curso', curso_id=curso.id)
+    return render(request, 'cursos/gestionar_curso.html', {'curso': curso})
+
+@login_required
+@user_passes_test(lambda u: u.user_type == 'estudiante')
+def inscribir_curso(request, curso_id):
+    curso = get_object_or_404(Curso, id=curso_id)
+    if request.user not in curso.estudiantes.all():
+        curso.estudiantes.add(request.user)
+        messages.success(request, f'Te has inscrito exitosamente en {curso.nombre}')
+    return redirect('mis_cursos')
+
+@login_required
+def ambiente(request):
+    """Vista que redirige según el tipo de usuario"""
+    user_type = request.user.user_type
+    if user_type == 'estudiante':
+        return redirect('ambiente_estudiante')
+    elif user_type == 'docente':
+        return redirect('ambiente_docente')
+    elif user_type == 'admin':
+        return redirect('ambiente_admin')
+    else:
+        messages.error(request, "Tipo de usuario no válido")
+        return redirect('index')
+
+@login_required
+def ambiente_estudiante(request):
+    """Vista del ambiente del estudiante"""
+    cursos_inscritos = request.user.cursos_inscritos.all()
+    cursos_disponibles = Curso.objects.exclude(estudiantes=request.user)
+    
+    context = {
+        'cursos_inscritos': cursos_inscritos,
+        'cursos_disponibles': cursos_disponibles,
+    }
+    return render(request, 'core/ambiente_estudiante.html', context)
+
+@login_required
+def detalle_curso(request, curso_id):
+    """Vista para ver detalles de un curso"""
+    curso = get_object_or_404(Curso, id=curso_id)
+    context = {
+        'curso': curso,
+    }
+    return render(request, 'core/detalle_curso.html', context)
+
+@login_required
+def inscribir_curso(request, curso_id):
+    """Vista para inscribirse a un curso"""
+    if request.user.user_type != 'estudiante':
+        messages.error(request, "Solo los estudiantes pueden inscribirse a cursos")
+        return redirect('ambiente')
+        
+    curso = get_object_or_404(Curso, id=curso_id)
+    curso.estudiantes.add(request.user)
+    messages.success(request, f"Te has inscrito exitosamente en {curso.nombre}")
+    return redirect('ambiente_estudiante')

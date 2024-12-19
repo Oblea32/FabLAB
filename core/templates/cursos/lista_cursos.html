@@ -1,0 +1,51 @@
+<!-- templates/cursos/lista_cursos.html -->
+{% extends 'core/base.html' %}
+
+{% block content %}
+<section class="page-section clearfix">
+    <div class="container">
+        <div class="intro">
+            <h2 class="section-heading mb-4" style="color: #000000;">
+                <span class="section-heading-upper"><strong>Cursos Disponibles</strong></span>
+                {% if user.user_type == 'admin' %}
+                <a href="{% url 'crear_curso' %}" class="btn btn-primary float-right" style="background-color: #00ffff; border-color: #00ffff; color: #000000;">
+                    <strong>Crear Nuevo Curso</strong>
+                </a>
+                {% endif %}
+            </h2>
+
+            {% if messages %}
+                <div class="alert alert-success" style="color: white; background-color: #356fdc;">
+                    {% for message in messages %}
+                        <p><strong>{{ message }}</strong></p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="row">
+                {% for curso in cursos %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ curso.nombre }}</h5>
+                            <p class="card-text">{{ curso.descripcion }}</p>
+                            <p class="card-text"><small>Docente: {{ curso.docente.get_full_name }}</small></p>
+                            
+                            {% if user.user_type == 'estudiante' %}
+                                {% if user in curso.estudiantes.all %}
+                                    <button class="btn btn-secondary" disabled>Ya inscrito</button>
+                                {% else %}
+                                    <a href="{% url 'inscribir_curso' curso.id %}" class="btn btn-primary">Inscribirse</a>
+                                {% endif %}
+                            {% elif user.user_type == 'docente' and curso.docente == user %}
+                                <a href="{% url 'gestionar_curso' curso.id %}" class="btn btn-warning">Gestionar Curso</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

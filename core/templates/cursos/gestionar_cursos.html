@@ -1,0 +1,47 @@
+<!-- templates/cursos/gestionar_curso.html -->
+{% extends 'core/base.html' %}
+
+{% block content %}
+<section class="page-section clearfix">
+    <div class="container">
+        <div class="intro">
+            <h2 class="section-heading mb-4" style="color: #000000;">
+                <span class="section-heading-upper"><strong>Gestionar Curso: {{ curso.nombre }}</strong></span>
+            </h2>
+
+            {% if messages %}
+                <div class="alert alert-success" style="color: white; background-color: #356fdc;">
+                    {% for message in messages %}
+                        <p><strong>{{ message }}</strong></p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="col-md-8">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label><strong>Nombre del Curso</strong></label>
+                            <input type="text" name="nombre" class="form-control" value="{{ curso.nombre }}">
+                        </div>
+                        <div class="form-group">
+                            <label><strong>Descripción</strong></label>
+                            <textarea name="descripcion" class="form-control">{{ curso.descripcion }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Actualizar Curso</button>
+                    </form>
+                </div>
+                <div class="col-md-4">
+                    <h4>Estudiantes Inscritos</h4>
+                    <ul class="list-group">
+                        {% for estudiante in curso.estudiantes.all %}
+                            <li class="list-group-item">{{ estudiante.get_full_name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
