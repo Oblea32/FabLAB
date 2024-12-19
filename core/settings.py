@@ -154,6 +154,6 @@ EMAIL_HOST_USER = 'c0729b6ebfe286'
 EMAIL_HOST_PASSWORD = 'a7e6403b9acf07'
 EMAIL_PORT = '2525'
 
-DEBUG = True  # Para local
+#DEBUG = True  # Para local
 # Para Render, en settings.py:
-#DEBUG = False  # Para producción
+DEBUG = False  # Para producción
