@@ -6,6 +6,8 @@ from .models import CustomUser
 from django.contrib.auth import get_user_model
 CustomUser = get_user_model()
 from .models import Curso
+from django.contrib.auth import authenticate
+
 
 class CursoForm(forms.ModelForm):
     class Meta:
@@ -52,15 +54,32 @@ class DocenteCreationForm(forms.ModelForm):
 
 
 # Formulario personalizado para el inicio de sesión (autenticación)
-class CustomAuthenticationForm(AuthenticationForm):  
-    # Personalización del campo de nombre de usuario con etiqueta y longitud máxima.
+class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(label='Nombre de usuario', max_length=150)
-    # Personalización del campo de contraseña con etiqueta y widget para ocultar caracteres.
     password = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
 
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        password = cleaned_data.get('password')
+        
+        if username and password:
+            self.user_cache = authenticate(
+                self.request, username=username, password=password
+            )
+            if self.user_cache is None:
+                raise forms.ValidationError(
+                    'Usuario o contraseña incorrectos.'
+                )
+            else:
+                if not self.user_cache.is_active:
+                    raise forms.ValidationError('Esta cuenta está inactiva.')
+        
+        return cleaned_data
+
     class Meta:
-        model = User  # Basado en el modelo `User` de Django.
-        fields = ['username', 'password']  # Campos incluidos en el formulario.
+        model = User
+        fields = ['username', 'password']
 
 
 # Formulario para el contacto

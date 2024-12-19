@@ -52,3 +52,8 @@ class Curso(models.Model):
         return self.nombre
     
 
+@receiver(post_save, sender=CustomUser)
+def ensure_user_in_group(sender, instance, created, **kwargs):
+    if instance.user_type == 'docente':
+        grupo_docentes, _ = Group.objects.get_or_create(name='Docentes')
+        instance.groups.add(grupo_docentes)

@@ -26,9 +26,13 @@ urlpatterns = [
     path('ambiente/estudiante/', views.ambiente_estudiante, name='ambiente_estudiante'),
     path('curso/<int:curso_id>/', views.detalle_curso, name='detalle_curso'),
     path('curso/<int:curso_id>/inscribir/', views.inscribir_curso, name='inscribir_curso'),
+    path('ambiente/docente/', views.ambiente_docente, name='ambiente_docente'),
+    path('curso/<int:curso_id>/editar/', views.editar_curso, name='editar_curso'),
+    path('curso/<int:curso_id>/lista-excel/', views.lista_alumnos_excel, name='lista_alumnos_excel'),
+    path('curso/<int:curso_id>/lista-pdf/', views.lista_alumnos_pdf, name='lista_alumnos_pdf'),
 # Rutas para el manejo de autenticación
-    path('accounts/', include('django.contrib.auth.urls')),  # Incluye las URLs de autenticación (login, logout, etc.)
-    path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'),  # Ruta de logout
+    path('login/', views.login_view, name='login'),  # Usa tu vista personalizada
+    path('logout/', views.logout_view, name='logout'),  # Usa tu vista de logout
 
 ]
 
