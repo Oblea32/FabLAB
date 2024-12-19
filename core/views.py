@@ -9,7 +9,7 @@ from django.contrib.contenttypes.models import ContentType  # Para asignar permi
 from django.core.paginator import Paginator  # Para manejar la paginación de listas.
 from django.contrib.auth.decorators import user_passes_test, login_required
 from .forms import CustomUserCreationForm, DocenteCreationForm
-from .models import Curso, CustomUser
+from .models import Curso, CustomUser, MaterialCurso
 from .forms import CursoForm
 from openpyxl import Workbook
 from django.http import HttpResponse
@@ -17,6 +17,10 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from io import BytesIO
 import csv
+from .forms import MaterialCursoForm
+import os
+from django.conf import settings
+
 
 
 
@@ -199,11 +203,17 @@ def ambiente_estudiante(request):
     return render(request, 'core/ambiente_estudiante.html', context)
 
 @login_required
+@user_passes_test(lambda u: u.user_type == 'estudiante')
 def detalle_curso(request, curso_id):
-    """Vista para ver detalles de un curso"""
+    """Vista para mostrar los detalles del curso y los materiales subidos"""
     curso = get_object_or_404(Curso, id=curso_id)
+    
+    # Obtener los materiales asociados al curso
+    materiales = MaterialCurso.objects.filter(curso=curso)
+    
     context = {
         'curso': curso,
+        'materiales': materiales
     }
     return render(request, 'core/detalle_curso.html', context)
 
@@ -241,6 +251,9 @@ def editar_curso(request, curso_id):
     """Vista para editar un curso"""
     curso = get_object_or_404(Curso, id=curso_id, docente=request.user)
     
+    # Recuperar los materiales del curso
+    materiales = MaterialCurso.objects.filter(curso=curso)
+    
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         descripcion = request.POST.get('descripcion')
@@ -255,7 +268,8 @@ def editar_curso(request, curso_id):
             messages.error(request, 'Por favor completa todos los campos')
             
     context = {
-        'curso': curso
+        'curso': curso,
+        'materiales': materiales  # Pasar los materiales al contexto
     }
     return render(request, 'core/editar_curso.html', context)
 
@@ -342,3 +356,56 @@ def lista_alumnos_pdf(request, curso_id):
     buffer.close()
     
     return response
+
+@login_required
+def subir_material(request, curso_id):
+    curso = get_object_or_404(Curso, id=curso_id)
+    
+    # Verificar que el usuario sea el docente del curso
+    if request.user != curso.docente:
+        messages.error(request, "No tienes permisos para subir material a este curso.")
+        return redirect('ambiente_docente')
+    
+    if request.method == 'POST':
+        form = MaterialCursoForm(request.POST, request.FILES)
+        if form.is_valid():
+            material = form.save(commit=False)
+            material.curso = curso  # Asociamos el material al curso
+            material.save()
+            messages.success(request, "Material subido exitosamente.")
+            return redirect('editar_curso', curso_id=curso.id)
+    else:
+        form = MaterialCursoForm()
+
+    return render(request, 'core/subir_material.html', {'form': form, 'curso': curso})
+
+@login_required
+@user_passes_test(lambda u: u.user_type == 'docente')
+def eliminar_material(request, material_id):
+    """Vista para eliminar un material del curso"""
+    # Obtén el material a eliminar
+    material = get_object_or_404(MaterialCurso, id=material_id)
+
+    # Verificar que el usuario sea el docente del curso
+    if material.curso.docente != request.user:
+        messages.error(request, "No tienes permisos para eliminar este material.")
+        return redirect('ambiente_docente')
+
+    # Eliminar el archivo de la carpeta del sistema
+    try:
+        # Elimina el archivo del sistema de archivos
+        file_path = os.path.join(settings.MEDIA_ROOT, str(material.archivo))
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+        else:
+            messages.error(request, "No se encontró el archivo en el sistema.")
+
+        # Eliminar el registro en la base de datos
+        material.delete()
+
+        messages.success(request, "Material eliminado correctamente.")
+    except Exception as e:
+        messages.error(request, f"Hubo un error al eliminar el material: {str(e)}")
+
+    # Redirigir al ambiente del docente o a la página del curso
+    return redirect('editar_curso', curso_id=material.curso.id)

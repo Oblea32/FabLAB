@@ -52,6 +52,16 @@ class Curso(models.Model):
         return self.nombre
     
 
+class MaterialCurso(models.Model):
+    curso = models.ForeignKey(Curso, related_name='materiales', on_delete=models.CASCADE)
+    archivo = models.FileField(upload_to='materiales_cursos/', null=True, blank=True)
+    tipo = models.CharField(max_length=50, choices=[('pdf', 'PDF'), ('word', 'Word'), ('ppt', 'PPT'), ('excel', 'Excel'), ('imagen', 'Imagen'), ('otro', 'Otro')])
+    nombre = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.nombre
+    
+
 @receiver(post_save, sender=CustomUser)
 def ensure_user_in_group(sender, instance, created, **kwargs):
     if instance.user_type == 'docente':

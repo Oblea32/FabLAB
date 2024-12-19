@@ -1,22 +1,38 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<section class="page-section clearfix">
+<section class="page-section" style="margin-top: 100px;">
     <div class="container">
-        <div class="intro">
-            <h2 class="section-heading mb-4" style="color: #000000;">
-                <span class="section-heading-upper"><strong>{{ curso.nombre }}</strong></span>
-            </h2>
-
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title">Detalles del Curso</h3>
-                    <p class="card-text"><strong>Descripción:</strong> {{ curso.descripcion }}</p>
-                    <p class="card-text"><strong>Docente:</strong> {{ curso.docente.get_full_name }}</p>
-                    
-                    {% if user.user_type == 'estudiante' and user not in curso.estudiantes.all %}
-                        <a href="{% url 'inscribir_curso' curso.id %}" class="btn btn-primary">Inscribirse en este curso</a>
-                    {% endif %}
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-center mb-0">Detalles del Curso</h2>
+                    </div>
+                    <div class="card-body">
+                        <h3>{{ curso.nombre }}</h3>
+                        <p>{{ curso.descripcion }}</p>
+                        <p><strong>Docente:</strong> {{ curso.docente.get_full_name }}</p>
+                        
+                        <hr>
+                        
+                        <h4>Materiales del Curso</h4>
+                        
+                        {% if materiales %}
+                            <ul class="list-group">
+                                {% for material in materiales %}
+                                    <li class="list-group-item">
+                                        <h5>{{ material.nombre }}</h5>
+                                        <p>Tipo: {{ material.tipo }}</p>
+                                        <a href="{{ material.archivo.url }}" class="btn btn-primary" download>Descargar</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>No hay materiales disponibles para este curso.</p>
+                        {% endif %}
+                        
+                    </div>
                 </div>
             </div>
         </div>

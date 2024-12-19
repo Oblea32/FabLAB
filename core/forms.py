@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 CustomUser = get_user_model()
 from .models import Curso
 from django.contrib.auth import authenticate
+from .models import MaterialCurso
 
 
 class CursoForm(forms.ModelForm):
@@ -108,3 +109,11 @@ class ContactForm(forms.Form):
         max_length=500, 
         widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Escriba aquí su mensaje', 'rows': 5})
     )
+
+
+
+
+class MaterialCursoForm(forms.ModelForm):
+    class Meta:
+        model = MaterialCurso
+        fields = ['archivo', 'tipo', 'nombre']

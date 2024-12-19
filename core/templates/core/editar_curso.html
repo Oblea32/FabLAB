@@ -38,6 +38,35 @@
                                 </a>
                             </div>
                         </form>
+                        
+                        <hr>
+                        
+                        <h3 class="text-center">Materiales del Curso</h3>
+
+                        <div class="d-grid gap-2 mb-4">
+                            <a href="{% url 'subir_material' curso.id %}" class="btn btn-success">Subir Material</a>
+                        </div>
+                        
+                        <div class="list-group">
+                            {% for material in materiales %}
+                            <div class="list-group-item">
+                                <h5>{{ material.nombre }}</h5>
+                                <p>Tipo: {{ material.tipo }}</p>
+                                <a href="{{ material.archivo.url }}" class="btn btn-primary" download>Descargar</a>
+                        
+                                <!-- Botón para eliminar material -->
+                                <a href="{% url 'eliminar_material' material_id=material.id %}" 
+                                class="btn btn-danger btn-sm" 
+                                onclick="return confirm('¿Estás seguro de que deseas eliminar este material?');">
+                                 <i class="bi bi-trash"></i> Eliminar
+                             </a>
+                            </div>
+                            {% empty %}
+                            <div class="alert alert-info text-center">
+                                No hay materiales subidos para este curso.
+                            </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<section class="page-section" style="margin-top: 100px;">
+    <div class="container">
+        <h2 class="text-center mt-0">Subir Material para el Curso: {{ curso.nombre }}</h2>
+        <hr class="divider" />
+        
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Subir Material</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
+

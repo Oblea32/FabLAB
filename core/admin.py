@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Curso
+from .models import CustomUser, Curso, MaterialCurso
 
 # Usamos UserAdmin para manejar el modelo CustomUser
 @admin.register(CustomUser)
@@ -38,6 +38,12 @@ class CursoAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'descripcion')  # Permite buscar por estos campos
     list_filter = ('docente',)  # Permite filtrar por docente
     filter_horizontal = ('estudiantes',)  # Muestra los estudiantes con un filtro horizontal
+
+@admin.register(MaterialCurso)
+class MaterialCursoAdmin(admin.ModelAdmin):
+    list_display = ('curso', 'nombre', 'tipo', 'archivo')
+    search_fields = ('nombre', 'curso__nombre')
+    list_filter = ('tipo', 'curso')
 
 
 
