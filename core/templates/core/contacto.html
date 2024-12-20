@@ -6,7 +6,7 @@
         <div class="intro" style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
             <h2 class="section-heading mb-4" style="color: #000000;">
         <div class="intro">
-            <h2 class="section-heading mb-4" style="color: #000000;">
+            <h2 class="section-heading mb-4" style="color: #e78a0f;">
                 <span class="section-heading-upper"><strong>Envíanos tu mensaje</strong></span>
             </h2>
 
@@ -28,7 +28,7 @@
                 {% csrf_token %}
                 
                 <div class="form-group">
-                    <label for="id_name" style="color: #fafafa;"><strong>Nombre y Apellido</strong></label>
+                    <label for="id_name" style="color: #000000;"><strong>Nombre y Apellido</strong></label>
                     {{ form.name }}
                     {% if form.name.errors %}
                         <div class="alert alert-danger mt-2" style="color: white; background-color: #dc3545;">
@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="id_email" style="color: #fafafa;"><strong>Correo</strong></label>
+                    <label for="id_email" style="color: #000000;"><strong>Correo</strong></label>
                     {{ form.email }}
                     {% if form.email.errors %}
                         <div class="alert alert-danger mt-2" style="color: white; background-color: #dc3545;">
@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="id_message" style="color: #f7f6f6;"><strong>Mensaje</strong></label>
+                    <label for="id_message" style="color: #000000;"><strong>Mensaje</strong></label>
                     {{ form.message }}
                     {% if form.message.errors %}
                         <div class="alert alert-danger mt-2" style="color: white; background-color: #dc3545;">
