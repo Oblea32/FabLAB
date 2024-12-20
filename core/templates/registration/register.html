@@ -1,24 +1,23 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-
 {% load crispy_forms_tags %}
 
 <section class="page-section clearfix">
     <div class="container">
-        <div class="intro">
-            <h2 class="section-heading mb-4" style="color: #f3b408e1;">
+        <div class="intro" style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h2 class="section-heading mb-4" style="color: #000000;">
                 <span class="section-heading-upper"><strong>¡Regístrate ahora!</strong></span>
                 <span class="section-heading-lower"><strong>Crea tu cuenta</strong></span>
             </h2>
             
             <!-- Mostrar los mensajes de Django (Éxito/Error) -->
             {% if messages %}
-                <div class="alert alert-success" style="color: white; background-color: #356fdc;">
-                    {% for message in messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %}" style="color: white; background-color: {% if message.tags == 'error' %}#dc3545{% else %}#356fdc{% endif %};">
                         <p><strong>{{ message }}</strong></p>
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endfor %}
             {% endif %}
             
             <!-- Formulario de Registro -->
@@ -26,7 +25,7 @@
                 {% csrf_token %}
 
                 <div class="form-group">
-                    <label for="id_first_name" style="color: hsl(32, 100%, 48%);"><strong>Nombre</strong></label>
+                    <label for="id_first_name" style="color: #000000;"><strong>Nombre</strong></label>
                     <input type="text" name="first_name" id="id_first_name" class="form-control" value="{{ form.first_name.value|default:'' }}" required>
                     {% if form.first_name.errors %}
                         <div class="alert alert-danger mt-2" style="color: white; background-color: #dc3545;">
@@ -38,7 +37,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="id_last_name" style="color: #f38d07;"><strong>Apellido</strong></label>
+                    <label for="id_last_name" style="color: #000000;"><strong>Apellido</strong></label>
                     <input type="text" name="last_name" id="id_last_name" class="form-control" value="{{ form.last_name.value|default:'' }}" required>
                     {% if form.last_name.errors %}
                         <div class="alert alert-danger mt-2" style="color: white; background-color: #dc3545;">
@@ -50,7 +49,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="id_email" style="color: #f5bc00;"><strong>Correo Electrónico</strong></label>
+                    <label for="id_email" style="color: #000000;"><strong>Correo Electrónico</strong></label>
                     <input type="email" name="email" id="id_email" class="form-control" value="{{ form.email.value|default:'' }}" required>
                     {% if form.email.errors %}
                         <div class="alert alert-danger mt-2" style="color: white; background-color: #dc3545;">
@@ -62,7 +61,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="id_username" style="color: #faab01;"><strong>Nombre de Usuario</strong></label>
+                    <label for="id_username" style="color: #000000;"><strong>Nombre de Usuario</strong></label>
                     <input type="text" name="username" id="id_username" class="form-control" value="{{ form.username.value|default:'' }}" required>
                     {% if form.username.errors %}
                         <div class="alert alert-danger mt-2" style="color: white; background-color: #dc3545;">
@@ -74,7 +73,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="id_password1" style="color: #f1a707;"><strong>Contraseña</strong></label>
+                    <label for="id_password1" style="color: #000000;"><strong>Contraseña</strong></label>
                     <input type="password" name="password1" id="id_password1" class="form-control" required>
                     {% if form.password1.errors %}
                         <div class="alert alert-danger mt-2" style="color: white; background-color: #dc3545;">
@@ -86,7 +85,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="id_password2" style="color: #f1a009;"><strong>Confirmar Contraseña</strong></label>
+                    <label for="id_password2" style="color: #000000;"><strong>Confirmar Contraseña</strong></label>
                     <input type="password" name="password2" id="id_password2" class="form-control" required>
                     {% if form.password2.errors %}
                         <div class="alert alert-danger mt-2" style="color: white; background-color: #dc3545;">
@@ -97,19 +96,15 @@
                     {% endif %}
                 </div>
 
-            
-
-                <button type="submit" class="btn btn-primary btn-xl mt-3" style="background-color: #fa3a00; border-color: #ff1100; color: #000000;">
+                <button type="submit" class="btn btn-primary btn-xl mt-3" style="background-color: #00ffff; border-color: #00ffff; color: #000000;">
                     <strong>Registrar</strong>
                 </button>
             </form>
 
-            <!-- Enlace para usuarios que ya tienen cuenta -->
-            <p class="mt-3" style="color: #07e3f3;">
+            <p class="mt-3" style="color: #000000;">
                 ¿Ya tienes cuenta? <a href="{% url 'login' %}" style="color: #356fdc;"><strong>Inicia sesión aquí</strong></a>
             </p>
         </div>
     </div>
 </section>
 {% endblock %}
-
